@@ -196,7 +196,7 @@ patent. The permission to fork and port carries a condition of its own: anyone w
 part of this code from you must get these terms (or the URL for them) and the
 `Required Notice:` line along with it.
 
-Only this CLI is offered under that licence; the Handoff browser extension, cloud and web
-board are closed source and are not part of this package. Everything above is a summary —
+That licence covers what is in this repository — the CLI and the audit skill. The Handoff
+browser extension, cloud and web board are closed source and are not here. Everything above is a summary —
 Noncompete, Competition, Notices, No Other Rights and Patent Defense in [LICENSE](LICENSE)
 are what bind.
