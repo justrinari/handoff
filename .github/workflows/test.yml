@@ -1,0 +1,27 @@
+name: test
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # 18 is the floor package.json declares in `engines`, and an untested floor
+        # is a promise nobody checked. 22 is what people actually run.
+        node: [18, 22]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - run: npm ci
+      # Includes the Cyrillic guard, which walks the whole repository.
+      - run: npx vitest run
+
+# Not here on purpose: `npm run smoke:capture`. It drives a real Google Chrome
+# (playwright-core ships no browser of its own), so it would depend on a binary the
+# runner image happens to provide rather than one this package declares. Run it
+# locally instead: `npm run smoke:capture`.

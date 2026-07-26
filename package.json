@@ -1,0 +1,52 @@
+{
+  "name": "get-handoff",
+  "version": "1.3.0",
+  "description": "Record a click-through walkthrough of a web flow from a plain-text plan — one self-contained HTML file, or a link.",
+  "license": "SEE LICENSE IN LICENSE",
+  "keywords": [
+    "walkthrough",
+    "interactive-demo",
+    "click-through-demo",
+    "visual-feedback",
+    "ai-agent",
+    "mcp",
+    "playwright"
+  ],
+  "homepage": "https://get-handoff.com/docs/cli/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/justrinari/handoff.git"
+  },
+  "bugs": {
+    "url": "https://github.com/justrinari/handoff/issues"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "bin": {
+    "handoff": "./bin/handoff.mjs",
+    "get-handoff": "./bin/handoff.mjs"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "!src/**/*.test.js",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "playwright-core": "^1.61.0"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "smoke:capture": "node e2e/capture-smoke.mjs"
+  },
+  "devDependencies": {
+    "jsdom": "^25.0.1",
+    "vitest": "^2.1.9"
+  }
+}

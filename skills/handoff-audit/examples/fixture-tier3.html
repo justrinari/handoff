@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Fixture — tier3 persona detectors</title>
+  <style>
+    body { margin: 0; font-family: sans-serif; width: 760px; }
+    form { display: block; margin: 20px; }
+    form input, form label, form span { display: block; margin: 8px 0; }
+    #trap-modal { margin: 20px; padding: 12px; border: 1px solid #999; }
+    .overlap-stage { position: relative; height: 90px; margin: 20px; }
+    .cover-stage { position: relative; margin: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Tier3 fixture</h1>
+
+  <!-- PLANT: fields a person cannot identify — no label/aria/placeholder/title.
+       Three bare text controls (input, input-2, textarea) verify multi-control
+       survival: page.screenshot()'s caret:hide adds an empty style="" to every
+       text-editable control page-wide, so the FIRST candidate's shot
+       (#unlabeled-input) would poison the pre-shot HTML-match of the controls
+       processed after it — shotForSelector strips style="" to prevent that
+       silent drop. (#bare-checkbox is excluded from the detector, so it is
+       never screenshotted and never the poisoner.) -->
+  <form>
+    <input type="checkbox" id="bare-checkbox"> Accept terms
+    <input type="text" id="unlabeled-input">
+    <input type="text" id="unlabeled-input-2">
+    <textarea id="unlabeled-textarea"></textarea>
+    <!-- controls that must NOT fire -->
+    <label for="labeled-input">Name</label>
+    <input type="text" id="labeled-input">
+    <input type="search" id="placeholder-input" placeholder="Search docs…">
+    <input type="tel" id="aria-input" aria-label="Phone number">
+    <label>Wrapped label <input type="text" id="wrapped-input"></label>
+    <input type="text" id="titled-input" title="Promo code">
+    <span id="city-label">City</span>
+    <input type="text" id="labelledby-input" aria-labelledby="city-label">
+    <input type="hidden" name="csrf" value="token">
+    <input type="submit" value="Send">
+  </form>
+
+  <!-- PLANT (Task 4): focus trap — Tab inside #trap-modal never leaves -->
+  <div id="trap-modal">
+    <button id="trap-a" type="button">Prev</button>
+    <button id="trap-b" type="button">Next</button>
+  </div>
+  <a href="https://example.com/" id="free-link">Outside link</a>
+  <button id="free-button" type="button">Outside button</button>
+  <script>
+    (() => {
+      const a = document.getElementById('trap-a');
+      const b = document.getElementById('trap-b');
+      document.getElementById('trap-modal').addEventListener('keydown', (e) => {
+        if (e.key !== 'Tab') return;
+        e.preventDefault();
+        (document.activeElement === a ? b : a).focus();
+      });
+    })();
+  </script>
+
+  <!-- PLANT (Task 3): two paragraphs painted over each other -->
+  <div class="overlap-stage">
+    <p id="overlap-under" style="position: absolute; top: 0; left: 12px; width: 220px; margin: 0;">This paragraph sits under another one on the same spot.</p>
+    <p id="overlap-over" style="position: absolute; top: 10px; left: 24px; width: 220px; margin: 0;">And this second paragraph is painted right on top of it.</p>
+  </div>
+  <!-- control: a caption over a cover image is a design choice, not text-on-text -->
+  <div class="cover-stage">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==" width="240" height="90" alt="cover">
+    <span style="position: absolute; top: 34px; left: 30px;">Caption over image</span>
+  </div>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Fixture — toast portal veil (regression)</title>
+</head>
+<body>
+  <!-- A broken image that MUST still be flagged, even though a full-viewport
+       pointer-events:none toast portal covers its centroid. The portal paints
+       nothing at the centroid: its own box is transparent, and its transient
+       toast text lives in a nested child positioned elsewhere. Attributing that
+       DESCENDANT text to the empty wrapper (via textContent) would false-drop
+       every candidate on modern apps — this fixture guards against that. -->
+  <img class="real-broken" src="./missing.png" width="160" height="90" alt="">
+  <div style="position: fixed; inset: 0; pointer-events: none;">
+    <div style="position: fixed; bottom: 8px; right: 8px;">Saved!</div>
+  </div>
+</body>
+</html>

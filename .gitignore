@@ -1,0 +1,20 @@
+node_modules/
+npm-debug.log*
+
+# vitest, when run with coverage
+coverage/
+
+# What `walk --local` writes if you follow examples/README.md verbatim. The CLI
+# never picks an output path itself — you name it — so this list only covers the
+# names this repo suggests. Note there is no blanket *.html rule: e2e/fixture.html
+# and the audit skill's fixtures are source, not output.
+/signup.html
+/checkout.html
+
+# `walk --out` writes the request body here only if you name it so.
+/payload.json
+
+# The browser profile `walk` reuses lives in ~/.handoff/browser, outside the repo.
+# `.handoff/walkthroughs/*.md` are plan files — those you probably want to commit.
+
+.DS_Store

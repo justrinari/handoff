@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Fixture — no focus trap (guard regression)</title>
+  <style>
+    body { width: 760px; font-family: sans-serif; }
+    a { display: block; margin: 12px; }
+  </style>
+</head>
+<body>
+  <h1>No trap here</h1>
+  <!-- 3 genuinely tab-reachable links + 2 visibility:hidden links that occupy
+       layout (non-zero rect) but are skipped by the browser's Tab order. They
+       must NOT inflate `total` and turn the natural 3-element Tab wrap into a
+       false "trap" (the cycle.length >= total guard depends on `total` counting
+       only tab-reachable elements). -->
+  <a href="https://example.com/a" id="link-1">One</a>
+  <a href="https://example.com/b" id="link-2">Two</a>
+  <a href="https://example.com/c" id="link-3">Three</a>
+  <a href="https://example.com/h1" id="hidden-1" style="visibility:hidden">Hidden one</a>
+  <a href="https://example.com/h2" id="hidden-2" style="visibility:hidden">Hidden two</a>
+</body>
+</html>

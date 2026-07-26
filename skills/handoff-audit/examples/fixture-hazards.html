@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Fixture — shot-time hazards</title>
+  <style>
+    body { margin: 0; font-family: sans-serif; }
+    .overlay { position: fixed; top: 0; left: 0; right: 0; height: 300px; background: #fff; z-index: 9; }
+    .covered { display: block; margin: 100px 40px; }   /* sits UNDER the fixed overlay when page is at top */
+    .spacer { height: 1200px; }
+    .visible-one { display: block; margin: 40px; }
+    .mutating { display: block; margin: 40px; }
+    #mover { position: absolute; top: 1600px; left: 0; width: 100px; animation: slide 1s linear infinite; }
+    @keyframes slide { from { transform: translateX(0); } to { transform: translateX(180px); } }
+  </style>
+</head>
+<body>
+  <div class="overlay">Cookie banner (fixed, covers the top 300px)</div>
+  <a href="#" class="covered">Covered dead link — must be DROPPED at shot time (occluded)</a>
+  <div class="spacer"></div>
+  <a href="#" class="visible-one">Visible dead link — must survive</a>
+  <!-- Continuously moving element: content is stable (passes the outerHTML
+       compare) but the box shifts every frame — only a post-shot re-compare
+       can catch the stale screenshot. Contains "TODO" so it's a placeholder-text
+       candidate. -->
+  <div id="mover">TODO replace this moving copy</div>
+  <!-- Buffer so the in-flow, positioned wrapper below (position:relative
+       participates in the same auto-z-index stacking bucket as #mover, and
+       being later in DOM order would otherwise paint over it) does not
+       geometrically overlap #mover's absolute box (top:1600px, ~54px tall)
+       and steal its pre-shot hit-test. -->
+  <div style="height: 200px;"></div>
+  <!-- Opaque click-through veil: elementFromPoint passes straight through
+       pointer-events:none, but the screenshot would show the veil. -->
+  <div style="position: relative; margin: 40px; width: 200px;">
+    <img class="veiled-broken" src="./missing-under-veil.png" width="160" height="90" alt="">
+    <div style="position: absolute; inset: 0; background: #e8e8e8; pointer-events: none;"></div>
+  </div>
+  <!-- Transparent click-through shield (a common event-capture pattern):
+       does not affect the screenshot — must NOT be dropped. -->
+  <div style="position: relative; margin: 40px; width: 200px;">
+    <img class="shielded-broken" src="./missing-under-shield.png" width="160" height="90" alt="">
+    <div style="position: absolute; inset: 0; pointer-events: none;"></div>
+  </div>
+  <div class="spacer"></div>
+  <a href="#" class="mutating">Dead now — mutates on post-detection scroll, must be DROPPED (stale)</a>
+  <script>
+    // Arms after the scanner's lazy-load pass returns to top; the next downward
+    // scroll (the screenshot pass) rewrites the link — simulating hydration/rotators.
+    let armed = false;
+    window.addEventListener('scroll', () => {
+      if (window.scrollY === 0) { armed = true; return; }
+      if (!armed) return;
+      const a = document.querySelector('.mutating');
+      if (a && a.getAttribute('href') === '#') { a.setAttribute('href', '/fixed-now'); a.textContent = 'Now real'; }
+    });
+  </script>
+</body>
+</html>

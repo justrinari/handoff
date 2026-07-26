@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Fixture — Tier1</title>
+  <style>
+    body { margin: 0; font-family: sans-serif; }
+    .hero { padding: 40px; }
+    .wide { width: 2000px; height: 40px; background: #eee; } /* forces horizontal overflow */
+    .clipbox { width: 120px; height: 20px; overflow: hidden; white-space: nowrap; border: 1px solid #ccc; }
+    .ellipsized { width: 120px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; border: 1px solid #cfc; }
+    .footcol { padding: 40px; }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <a href="#" class="cta">Get started</a>            <!-- dead-link #1 (hero) -->
+    <a href="#" class="menu-toggle" role="button" aria-expanded="false">Menu</a> <!-- NEGATIVE: JS-toggle, must NOT be flagged -->
+    <img src="/does-not-exist-xyz.png" alt="broken" />  <!-- broken-image; its "Failed to load resource" console noise must be filtered -->
+    <img class="tpl-placeholder" alt="template placeholder, no src" />  <!-- NEGATIVE: no src — never attempted, must NOT be flagged -->
+    <img class="tpl-empty" src="" alt="empty src placeholder" />        <!-- NEGATIVE: empty src — must NOT be flagged -->
+  </header>
+
+  <section class="body">
+    <p class="lorem">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p> <!-- placeholder-text -->
+    <a href="#" class="promo">TODO: promo copy</a>      <!-- dead-link #2 AND placeholder-text: cross-type anchor collision (Task 10) -->
+    <div class="wide"></div>                            <!-- layout-overflow -->
+    <div class="clipbox">This sentence is definitely too long to fit inside the little clip box.</div> <!-- element-clip -->
+    <div class="ellipsized">Intentionally truncated with an ellipsis, not a defect at all.</div> <!-- NEGATIVE: ellipsis, must NOT be flagged -->
+    <script style="display:block; width:200px; height:20px;">/* TODO: styled script text must NOT be flagged */</script> <!-- NEGATIVE: script text is not content -->
+    <p class="hid-vis" style="visibility:hidden">Lorem ipsum hidden by visibility</p> <!-- NEGATIVE: a11y-hidden, must NOT be flagged -->
+    <p class="hid-op" style="opacity:0">Lorem ipsum hidden by opacity</p>             <!-- NEGATIVE: invisible, must NOT be flagged -->
+    <div style="opacity:0"><p class="hid-op-anc">Lorem ipsum hidden by ancestor opacity</p></div> <!-- NEGATIVE: ancestor-invisible, must NOT be flagged -->
+  </section>
+
+  <footer class="footcol">
+    <a href="#">Home</a>                                <!-- dead-link #3 (footer) -->
+  </footer>
+
+  <script>
+    console.error('fixture synthetic console error at ' + window.innerWidth + 'px');   // console-error (the only one that must survive the resource filter)
+  </script>
+</body>
+</html>
