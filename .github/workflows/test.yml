@@ -8,9 +8,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # 18 is the floor package.json declares in `engines`, and an untested floor
-        # is a promise nobody checked. 22 is what people actually run.
-        node: [18, 22]
+        # 20 is the floor package.json declares in `engines`, and an untested floor
+        # is a promise nobody checked — this matrix caught it reading 18 while
+        # playwright-core demanded 20. 22 is what people actually run.
+        node: [20, 22]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

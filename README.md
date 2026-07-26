@@ -16,7 +16,7 @@ npm i -g get-handoff
 Or skip the install and run it with `npx get-handoff …`. The binary answers to both
 `handoff` and `get-handoff`.
 
-It needs Node 18 or newer (it uses the global `fetch`) and a locally installed
+It needs Node 20 or newer — the floor `playwright-core` sets — and a locally installed
 **Google Chrome** — the package ships `playwright-core`, which drives a browser but never
 downloads one. Chromium, Edge and Firefox are not substitutes for the browser it launches;
 `--attach` is the way to drive something else, and it takes any Chromium-family browser you
