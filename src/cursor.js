@@ -24,7 +24,7 @@ export function installGhost() {
         box-shadow:0 2px 8px rgba(15,27,51,.4);opacity:0;
         transition:transform 400ms cubic-bezier(.22,.61,.36,1), opacity 160ms linear}
       .ring{position:fixed;left:0;top:0;width:22px;height:22px;margin:-11px 0 0 -11px;
-        border-radius:50%;border:2px solid #F5A524;opacity:0;
+        border-radius:50%;border:2px solid #F5A623;opacity:0;
         transition:transform 420ms ease-out, opacity 420ms ease-out}
     </style>
     <div class="ring"></div><div class="dot"></div>`;
