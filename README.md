@@ -86,8 +86,8 @@ same pins on a shared board. See [get-handoff.com](https://get-handoff.com).
 | `handoff walk <plan.md>` | Runs the plan in a browser, captures a frame per step, and creates a draft (or, with `--local`, writes the HTML file). |
 | `handoff publish <wlk_id> [--summary file.json]` | Publishes a draft as a public link. The summary is a JSON array of `{ stepIdx, text }`, one item per step. |
 | `handoff list` | Every walkthrough belonging to your key, with its status, plan key and title; published ones also show their link. |
-| `handoff prune` | Deletes **all** drafts of your key. Published walkthroughs are untouched. No confirmation prompt. |
-| `handoff revoke <slug\|wlk_id>` | Switches off a link you already shared. The record stays — this does not delete the capture. |
+| `handoff prune` | Deletes **all** drafts of your key, plus every walkthrough whose link you revoked — together with the notes left on it. Walkthroughs with a live link are untouched. No confirmation prompt. |
+| `handoff revoke <slug\|wlk_id>` | Switches off a link you already shared. The record stays until the next `prune` — revoking does not delete the capture by itself. |
 
 `publish`, `list`, `prune` and `revoke` all need a key and no browser.
 

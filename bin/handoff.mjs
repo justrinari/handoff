@@ -12,7 +12,7 @@ import { renderLocalHtml, formatBytes, failedTally, ATTACH_LIMIT_BYTES } from ".
 const USAGE = `handoff walk <plan.md> [options]
 handoff publish <wlk_id> [--summary <file.json>]  — publish a draft (and attach a summary)
 handoff list              — list your walkthroughs (published ones and drafts)
-handoff prune             — delete your DRAFTS (published ones are untouched)
+handoff prune             — delete your drafts and revoked walkthroughs (live links stay)
 handoff revoke <slug|id>  — revoke a link you already shared
 
   --attach <url>     drive an already-running Chrome over CDP
@@ -118,8 +118,19 @@ if (cmd === "list") {
 
 if (cmd === "prune") {
   requireKey();
-  const n = await pruneWalkthroughs(cfg);
-  console.log(n === 0 ? "No drafts to delete." : `Drafts deleted: ${n} (published ones untouched).`);
+  // Name the two kinds separately: "deleted 4" after a prune the user expected to
+  // hit drafts only would read as data loss. Revoked ones take their notes with them,
+  // so that is said out loud rather than discovered later.
+  const { pruned, drafts, revoked } = await pruneWalkthroughs(cfg);
+  const parts = [];
+  if (drafts) parts.push(`${drafts} draft${drafts === 1 ? "" : "s"}`);
+  if (revoked) parts.push(`${revoked} revoked (with their notes)`);
+  // A server older than the breakdown answers with the total alone: fall back to it
+  // rather than printing "Deleted ." at a user who just deleted something.
+  const what = parts.length ? parts.join(" and ") : `${pruned} walkthrough${pruned === 1 ? "" : "s"}`;
+  console.log(pruned === 0
+    ? "Nothing to delete: no drafts, no revoked walkthroughs."
+    : `Deleted ${what}. Live links are untouched.`);
   process.exit(0);
 }
 

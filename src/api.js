@@ -95,7 +95,11 @@ export async function listWalkthroughs(cfg, fetchImpl = fetch) {
   return data.walkthroughs ?? [];
 }
 
-// Clean up the drafts of this key (published walkthroughs are untouched).
+// Clean up what is no longer shown to anyone: the drafts of this key, and the
+// walkthroughs whose link was revoked — the notes left on those go with them. A
+// walkthrough with a live link is never touched. The breakdown is reported back
+// so the caller can say which of the two it deleted; older servers only send
+// `pruned`, hence the fallbacks.
 export async function pruneWalkthroughs(cfg, fetchImpl = fetch) {
   const res = await fetchImpl(`${cfg.apiBase}/walkthrough-prune`, {
     method: "POST",
@@ -104,7 +108,7 @@ export async function pruneWalkthroughs(cfg, fetchImpl = fetch) {
   });
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(`could not prune: ${data.error ?? res.status}`);
-  return data.pruned ?? 0;
+  return { pruned: data.pruned ?? 0, drafts: data.drafts ?? 0, revoked: data.revoked ?? 0 };
 }
 
 // Revoking a link: the only "stop" button for a walkthrough that has already been

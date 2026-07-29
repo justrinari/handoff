@@ -151,9 +151,16 @@ describe("listWalkthroughs / pruneWalkthroughs", () => {
     expect(out).toHaveLength(1);
   });
 
-  it("prune returns how many were deleted", async () => {
+  it("prune reports the breakdown, so the caller can name what it deleted", async () => {
+    const fetchImpl = async () => ({ ok: true, json: async () => ({ pruned: 3, drafts: 1, revoked: 2 }) });
+    expect(await pruneWalkthroughs(cfg, fetchImpl)).toEqual({ pruned: 3, drafts: 1, revoked: 2 });
+  });
+
+  // A server that predates the breakdown still answers with `pruned` alone. Reading
+  // that as "0 of each" would print "Deleted ." — the fallbacks keep it honest.
+  it("prune survives a server that only sends the total", async () => {
     const fetchImpl = async () => ({ ok: true, json: async () => ({ pruned: 3 }) });
-    expect(await pruneWalkthroughs(cfg, fetchImpl)).toBe(3);
+    expect(await pruneWalkthroughs(cfg, fetchImpl)).toEqual({ pruned: 3, drafts: 0, revoked: 0 });
   });
 
   it("prune says why it did not work", async () => {
