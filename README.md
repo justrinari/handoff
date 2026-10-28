@@ -59,7 +59,7 @@ only shows: a viewer cannot leave a note on a frame.
 
 ```sh
 handoff walk flow.md \
-  --api https://makhtriiptwkicmksbdr.supabase.co/functions/v1 \
+  --api https://bhbdmxhgrjzksqpswjye.supabase.co/functions/v1 \
   --key fbt_your_key
 ```
 

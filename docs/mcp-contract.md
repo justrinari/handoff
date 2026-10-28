@@ -11,7 +11,7 @@ below is a claim about a specific request or response.
 ## Endpoint
 
 ```
-https://makhtriiptwkicmksbdr.supabase.co/functions/v1/mcp
+https://bhbdmxhgrjzksqpswjye.supabase.co/functions/v1/mcp
 ```
 
 That is the whole URL. There is **no** `api.get-handoff.com` — this project once published that
